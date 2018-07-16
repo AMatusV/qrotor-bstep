@@ -1,0 +1,9 @@
+<launch>
+  
+   <node name="keyboard_node" pkg="keyboard" type="keyboard" output="screen" />
+
+   <node name="setpoints_node" pkg="controller" type="setpoints" output="screen" >
+      <remap from="keyup" to="/keyboard_node/keyup" />
+   </node>
+
+</launch>

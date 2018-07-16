@@ -1,0 +1,28 @@
+<launch>
+  
+   <node name="keyboard_node" pkg="keyboard" type="keyboard" output="screen" />
+
+   <node pkg="lpms" type="lpms_node" name="lpms_sensor" output="screen">
+        <param name="mac_addr_device" value="00:04:3E:9F:E1:47"/>
+    </node>
+
+   <node name="setpoints_node" pkg="controller" type="setpoints" output="screen" >
+      <remap from="keyup" to="/keyboard_node/keyup" />
+   </node>
+
+   <node name="attitude_node" pkg="controller" type="attitude" output="screen" >
+      <param name="Ke1" value="4.0" />
+      <param name="Ke2" value="4.0" />
+      <param name="Ke3" value="4.0" />
+      <param name="Ko1" value="8.0" />
+      <param name="Ko2" value="8.0" />
+      <param name="Ko3" value="8.0" />
+      <remap from="state" to="/angles" />
+      <remap from="attitude_enable" to="/general_enable" /> 
+   </node>
+
+   <node name="mixer_node" pkg="controller" type="mixer" output="screen" >
+      <remap from="mixer_enable" to="/general_enable" />
+   </node>
+
+</launch>

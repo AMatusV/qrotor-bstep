@@ -1,0 +1,15 @@
+#!/usr/bin/env python
+PACKAGE = "controller"
+ 
+from dynamic_reconfigure.parameter_generator_catkin import *
+ 
+gen = ParameterGenerator()
+ 
+gen.add("roll_c",  double_t, 0, "Roll coef",  6.2163, 0.0, 10)
+gen.add("pitch_c", double_t, 0, "Pitch coef", 6.2163, 0.0, 10)
+gen.add("yaw_c",   double_t, 0, "Yaw coef",  1.0, 0.0, 10)
+gen.add("c_a",  double_t, 0, "Coef a",  0.0000083438, 0.0, 10)
+gen.add("c_b",  double_t, 0, "Coef b", -0.015693, -1.0, 10)
+gen.add("c_c",  double_t, 0, "Coef c",  7.2688, 0.0, 10)
+
+exit(gen.generate(PACKAGE, "controller", "Mixer"))

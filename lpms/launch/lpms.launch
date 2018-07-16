@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+
+    <node pkg="lpms" type="lpms_node" name="lpms_sensor" output="screen">
+
+        <!-- <param name="mac_addr_device" value="00:04:3E:9E:00:7B"/> -->
+        <param name="mac_addr_device" value="00:04:3E:9F:E1:47"/>
+    
+    </node>
+
+</launch>

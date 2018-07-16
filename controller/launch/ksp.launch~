@@ -1,0 +1,20 @@
+<launch>
+  
+   <node name="keyboard_node" pkg="keyboard" type="keyboard" output="screen" />
+
+   <node name="setpoints_node" pkg="controller" type="setpoints" output="screen" >
+      <remap from="keyup" to="/keyboard_node/keyup" />
+   </node>
+
+   <node name="position_node" pkg="controller" type="position" output="screen" >
+      <param name="Kr1" value="1" />
+      <param name="Kr2" value="1" />
+      <param name="Kr3" value="1" />
+      <param name="Kv1" value="1.5" />
+      <param name="Kv2" value="1.5" />
+      <param name="Kv3" value="1.5" />
+      <remap from="state" to="/vicon/odro/odro" />
+      <remap from="position_enable" to="/general_enable" /> 
+   </node>
+
+</launch>

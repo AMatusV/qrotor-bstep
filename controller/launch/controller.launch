@@ -1,0 +1,42 @@
+<launch>
+  
+   <node name="keyboard_node" pkg="keyboard" type="keyboard" output="screen" />
+
+   <node pkg="vicon_bridge" type="vicon_bridge" name="vicon" output="screen">
+      <param name="stream_mode" value="ClientPull" type="str" />
+      <!--param name="datastream_hostport" value="192.168.0.13:801" type="str" /-->
+      <param name="datastream_hostport" value="192.168.10.1:801" type="str" />
+      <param name="tf_ref_frame_id" value="/world" type="str" />
+   </node>
+
+   <node name="setpoints_node" pkg="controller" type="setpoints" output="screen" >
+      <remap from="keyup" to="/keyboard_node/keyup" />
+   </node>
+
+   <node name="position_node" pkg="controller" type="position" output="screen" >
+      <param name="Kr1" value="1.0" />
+      <param name="Kr2" value="1.0" />
+      <param name="Kr3" value="1.0" />
+      <param name="Kv1" value="2.0" />
+      <param name="Kv2" value="2.0" />
+      <param name="Kv3" value="2.0" />
+      <remap from="state" to="/vicon/aaron_bebop/aaron_bebop" />
+      <remap from="position_enable" to="/general_enable" />
+   </node>
+
+   <node name="attitude_node" pkg="controller" type="attitude" output="screen" >
+      <param name="Ke1" value="4.0" />
+      <param name="Ke2" value="4.0" />
+      <param name="Ke3" value="4.0" />
+      <param name="Ko1" value="8.0" />
+      <param name="Ko2" value="8.0" />
+      <param name="Ko3" value="8.0" />
+      <remap from="state" to="/vicon/aaron_bebop/aaron_bebop" />
+      <remap from="attitude_enable" to="/general_enable" /> 
+   </node>
+
+   <node name="mixer_node" pkg="controller" type="mixer" output="screen" >
+      <remap from="mixer_enable" to="/general_enable" />
+   </node>
+
+</launch>
