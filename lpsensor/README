@@ -1,0 +1,70 @@
+This program and its source code are part of the OpenMAT open-source 
+library. If you have any questions regarding the usage of the library 
+feel free to contact the developers:
+
+    LP-Research Inc.
+    303, Y-Flat, 1-11-15, Nishiazabu,
+    Minato-ku, Tokyo, 106-0031 Japan
+    Telephone: +81-3-6804-1610
+    Email: klaus@lp-research.com or lin@lp-research.com or yap@lp-research.com
+
+We would like to give credits to the following people / companies / projects
+whose open-source develpoments we have used:
+
+    QWT: Uwe Rathmann, Josef Wilgen (http://qwt.sourceforge.net/)
+    ICE: ZeroC (http://www.zeroc.com)
+    QT: NOKIA / Trolltech (http://qt.nokia.com/)
+    Application Icon: Fast Icon (http://www.fasticon.com/commercial_license.html)
+    PugiXML: Arseny Kapoulkine (http://pugixml.org/)
+    Boost: Boost.org (http://www.boost.org/)
+
+For further information on LP-Research, please visit our website:
+
+    http://www.lp-research.com
+
+
+Deb package installation
+========================
+libLpSensor depends on libbluetooth.so.
+    $ sudo apt-get install libbluetooth-dev
+    $ sudo dpkg -i liblpsensor-1.3.5-Linux.deb
+    $ dpkg -L liblpsensor
+
+Compiling Sample programs
+=========================
+You can use libraries provided in ./lib to interface with our sensors directly. A simple example program is provided in ./sample demonstrating how to do this:
+    $ cd ./sample
+    $ mkdir build
+    $ cd build
+    $ cmake ..
+    $ make
+    $ sudo ./LpmsSimpleExample
+
+TroubleShooting
+===============
+- LPMS-CURS2 USB connection
+LPMS-CURS2 uses Silicon Labs CP2102 usb chip. Connection to the sensor is done through virtual com port.
+
+- LPMS-CU connection
+Before connecting to LPMS-CU, make sure ftdi_sio module is unloaded:
+    $ sudo rmmod ftdi_sio
+    $ sudo rmmod usbserial
+  ** see http://www.ftdichip.com/Drivers/D2XX/Linux/ReadMe-linux.txt
+
+Alternatively if you do not wish to unload ftdi_sio module, create a udev rule to unbind device individually:
+1) obtain Lpms-CU serial number
+    $ udevadm info -a -p $(udevadm info -q path -n ttyUSB0) | egrep -i "ATTRS{serial}|ATTRS{idVendor}|ATTRS{idProduct}" -m 3
+
+2) create a udev file (eg. 99-ftdi.rules) with the following details:
+    # 99-ftdi.rules
+    ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", GROUP=”adm”, ATTRS{serial}=="A5022WEP", RUN+="/bin/sh -c 'echo $kernel > /sys/bus/usb/drivers/ftdi_sio/unbind'"
+    ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", GROUP=”adm”, ATTRS{serial}=="A5022WEP", RUN+="/bin/sh -c 'echo $kernel > /sys/bus/usb/drivers/usbserial/unbind'"
+    ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", MODE="0666", GROUP="tty"
+
+
+3) cp the file to udev directory and restart udev service:
+    $ sudo cp ./99-ftdi.rules /etc/udev/rules.d/
+    $ sudo service udev restart
+
+4) unplug and plug in Lpms-CU and make sure the sensor is disconnected properly:
+    $ dmesg | tail

@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/oyuki/catkin_ws/src/sensor_LPMS_ROS/LPMS_B2/LpSensor-1.3.5-Linux-x86-64/sample/main.cpp
+cstdio
+-
+thread
+-
+LpmsSensorI.h
+/home/oyuki/catkin_ws/src/sensor_LPMS_ROS/LPMS_B2/LpSensor-1.3.5-Linux-x86-64/sample/LpmsSensorI.h
+LpmsSensorManagerI.h
+/home/oyuki/catkin_ws/src/sensor_LPMS_ROS/LPMS_B2/LpSensor-1.3.5-Linux-x86-64/sample/LpmsSensorManagerI.h
+lpsensor/LpmsSensorI.h
+/home/oyuki/catkin_ws/src/sensor_LPMS_ROS/LPMS_B2/LpSensor-1.3.5-Linux-x86-64/sample/lpsensor/LpmsSensorI.h
+lpsensor/LpmsSensorManagerI.h
+/home/oyuki/catkin_ws/src/sensor_LPMS_ROS/LPMS_B2/LpSensor-1.3.5-Linux-x86-64/sample/lpsensor/LpmsSensorManagerI.h
+

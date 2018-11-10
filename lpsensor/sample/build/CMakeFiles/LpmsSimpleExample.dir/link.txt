@@ -1,0 +1,1 @@
+/usr/bin/c++    -std=c++11 -std=gnu++11 -O3 -DNDEBUG    CMakeFiles/LpmsSimpleExample.dir/main.o  -o LpmsSimpleExample -rdynamic -lLpSensor -lpthread -ldl -lrt 
