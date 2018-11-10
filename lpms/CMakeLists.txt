@@ -9,12 +9,6 @@ find_package(catkin REQUIRED COMPONENTS
   controller
 )
 
-## Generate added messages and services with any dependencies listed here
-#generate_messages(
-#  DEPENDENCIES
-#  std_msgs
-#)
-
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES lpms
@@ -31,19 +25,6 @@ include_directories(include)
 include_directories(
   ${catkin_INCLUDE_DIRS}
 )
-
-
-## Declare a C++ executable
-#add_executable(lpms_node lpms_node src/lpms.cpp)
-
-## Specify libraries to link a library or executable target against
-#target_link_libraries(lpms_node
-#  ${catkin_LIBRARIES}
-#  LpSensor.so
-#  pthread
-#  dl
-#  rt
-#)
 
 
 ## Declare a C++ executable
