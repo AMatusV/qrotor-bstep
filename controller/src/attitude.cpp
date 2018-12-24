@@ -61,14 +61,9 @@ std::string topic_from_position, controller_enable_topic, node_name = "attitude_
 ros::Publisher control_effort_pub;
 controller::FloatList control_msg;
 
-// Diagnostic objects
-//double min_loop_frequency = 1, max_loop_frequency = 1000;
-//int measurements_received = 0;
-
 // Dynamical system parameters
 double inertia[3], mass;
 double gravity = 9.81;
-
 
 
 void setpoints_callback(const controller::FloatList& setpoint_msg)
@@ -192,44 +187,6 @@ void plant_state_callback(const controller::FloatList& state_msg)
    double derr[3] = {filtered_error_deriv[0][0], filtered_error_deriv[0][1], filtered_error_deriv[0][2]};
    //double deuler[3] = {filtered_euler_deriv[0][0], filtered_euler_deriv[0][1], filtered_euler_deriv[0][2]};
 	//double ang_vel[3], error_omega[3], B11, B13, B22, B23, B32, B33;
-
-   // error_omega = inverse(B)*derror; B12, B21, B31 = 0
-   //B11 = 1;  
-   /*B13 = -sin(pitch);  // without filtering
-   B22 = cos(roll);
-   B23 = cos(pitch)*sin(roll);
-   B32 = -sin(roll);
-   B33 = cos(roll)*cos(pitch);*/
-   /*B13 = -sin(filtered_euler[0][1]);  // with filtering
-   B22 = cos(filtered_euler[0][0]);
-   B23 = cos(filtered_euler[0][1])*sin(filtered_euler[0][0]);
-   B32 = -sin(filtered_euler[0][0]);
-   B33 = cos(filtered_euler[0][0])*cos(filtered_euler[0][1]);*/
-   /*error_omega[0] = derr[0] + B13*derr[2];
-   error_omega[1] = B22*derr[1] + B23*derr[2];
-   error_omega[2] = B32*derr[1] + B33*derr[2];*/
-
-	// Integrate angular velocity error
-   /*error_omega_int[0] += error_omega[0]*delta_t.toSec();
-   error_omega_int[1] += error_omega[1]*delta_t.toSec();
-   error_omega_int[2] += error_omega[2]*delta_t.toSec();*/
-
-   // Apply windup limit to limit the size of the integral terms
-	/*for (int i = 0; i < 3; i++) {
-		if ( error_omega_int[i] > fabsf(windup_limit))
-   		error_omega_int[i] = fabsf(windup_limit);
-
-  		if ( error_omega_int[i] < -fabsf(windup_limit))
-    		error_omega_int[i] = -fabsf(windup_limit);
-   }*/
-  	
-   // Angular velocity estimates, ang_vel = inverse(B)*euler_deriv
-   /*angv[0] = euler_deriv[0][0] + B13*euler_deriv[0][2];  // without filtering
-   angv[1] = B22*euler_deriv[0][1] + B23*euler_deriv[0][2];
-   angv[2] = B32*euler_deriv[0][1] + B33*euler_deriv[0][2];*/
-   /*ang_vel[0] = deuler[0] + B13*deuler[2];  // with filtering
-   ang_vel[1] = B22*deuler[1] + B23*deuler[2];
-   ang_vel[2] = B32*deuler[1] + B33*deuler[2];*/
 
    // BTackstepping method
    control_effort[1] = Gm[0]/inertia[0]*error_omega_int[0]
@@ -379,7 +336,7 @@ int main(int argc, char **argv)
    node_priv.param<double>("roll_windup_limit", windup_limit[0], 2.5);
    node_priv.param<double>("pitch_windup_limit", windup_limit[1], 2.5);
 	node_priv.param<double>("yaw_windup_limit", windup_limit[2], 2.5);
-	node_priv.param<double>("thrust_upper_limit_", upper_limit[0], 10.0);
+	node_priv.param<double>("thrust_upper_limit", upper_limit[0], 10.0);
    node_priv.param<double>("thrust_lower_limit", lower_limit[0], -10.0);
    node_priv.param<double>("roll_upper_limit", upper_limit[1], 2.5);
    node_priv.param<double>("roll_lower_limit", lower_limit[1], -2.5);
@@ -387,7 +344,7 @@ int main(int argc, char **argv)
    node_priv.param<double>("pitch_lower_limit", lower_limit[2], -2.5);
    node_priv.param<double>("yaw_upper_limit", upper_limit[3], 1.0);
    node_priv.param<double>("yaw_lower_limit", lower_limit[3], -1.0);
-	node_priv.param<double>("mass", mass, 0.72);
+	node_priv.param<double>("mass", mass, 0.9);
 	node_priv.param<double>("x_inertia", inertia[0], 0.1167);
 	node_priv.param<double>("y_inertia", inertia[1], 0.1105);
 	node_priv.param<double>("z_inertia", inertia[2], 0.2218);
@@ -426,7 +383,6 @@ int main(int argc, char **argv)
    // Wait for first messages
    while( !ros::topic::waitForMessage<controller::FloatList>(setpoints_topic, ros::Duration(10.)) )
       ROS_WARN_STREAM("Waiting for the setpoint to be published.");
-   //while( !ros::topic::waitForMessage<geometry_msgs::TransformStamped>(topic_from_plant, ros::Duration(10.)) )
    while( !ros::topic::waitForMessage<controller::FloatList>(topic_from_plant, ros::Duration(10.)) )
       ROS_WARN_STREAM("Waiting for a msg on the state of the plant.");
    while( !ros::topic::waitForMessage<controller::FloatList>(topic_from_position, ros::Duration(10.)) )

@@ -15,7 +15,7 @@
 
 // Primary Mixer input & ouput variables
 double control_effort[4];  // global thrust, roll, pitch, yaw torque
-bool mixer_enabled = true; // Mixer node is not enable to run
+bool mixer_enabled = true;
 uint16_t motor_command[4];
 
 // Mixer reconfigurable parameters
@@ -59,14 +59,6 @@ enum pwm_regs {
   __ALLCALL            = 0x01,
   __OUTDRV             = 0x04
 };
-
-
-
-/*void force_callback(const std_msgs::Float64& force_msg)
-{
-   force = force_msg.data;
-   //ROS_INFO("force: %f", force);
-}*/
 
 
 void attitude_callback(const controller::FloatList& attitude_msg)
@@ -116,7 +108,7 @@ void reconfigure_callback(controller::MixerConfig &config, uint32_t level)
 }
 
 
-/*static void _set_pwm_interval (int servo, int start, int end)
+static void _set_pwm_interval (int servo, int start, int end)
 {
       ROS_DEBUG("_set_pwm_interval enter");
 
@@ -232,7 +224,7 @@ static void _pwm_init ()
    _set_pwm_interval_all (0, 0);
 
    _set_pwm_frequency((int)pwm_frequency);
-}*/
+}
 
 
 int main(int argc, char **argv)
@@ -251,12 +243,10 @@ int main(int argc, char **argv)
    node_priv.param<double>("c_c", c_c, 7.2688);
    node_priv.param<double>("pwm_frequency", pwm_frequency, 300.0);
    node_priv.param<double>("node_frequency", node_frequency, 200.0);
-   //node_priv.param<std::string>("force_topic", force_topic, "force");
    node_priv.param<std::string>("topic_from_attitude", topic_from_attitude, "attitude_control");
    node_priv.param<std::string>("mixer_enable_topic", mixer_enable_topic, "mixer_enable");
 
    // Instantiate subscribers
-   //ros::Subscriber force_sub = node.subscribe(force_topic, 1, force_callback);
    ros::Subscriber torque_sub = node.subscribe(topic_from_attitude, 1, attitude_callback);
    ros::Subscriber enable_sub = node.subscribe(mixer_enable_topic, 1, mixer_enable_callback);
 
@@ -267,11 +257,9 @@ int main(int argc, char **argv)
    config_server.setCallback(f);
 
    // Initialize PWM board
-   //_pwm_init();
+   _pwm_init();
 
    // Wait for first messages
-   /*while( !ros::topic::waitForMessage<std_msgs::Float64>(force_topic, ros::Duration(10.)) )
-      ROS_WARN_STREAM("Waiting for the force msg to be published.");*/
    while( !ros::topic::waitForMessage<controller::FloatList>(topic_from_attitude, ros::Duration(10.)) )
       ROS_WARN_STREAM("Waiting for the control msg to be published.");
 
@@ -304,9 +292,9 @@ int main(int argc, char **argv)
          }
 
          if (cmd_flag) {
-            /*for (int i = 0; i < 4; i++)
-               _set_pwm_interval(i+1, 0, motor_command[i]);*/
-            ROS_INFO("MC: %d, %d, %d, %d", motor_command[0], motor_command[1], motor_command[2], motor_command[3]);
+            for (int i = 0; i < 4; i++)
+               _set_pwm_interval(i+1, 0, motor_command[i]);
+            //ROS_INFO("MC: %d, %d, %d, %d", motor_command[0], motor_command[1], motor_command[2], motor_command[3]);
          }
          else {
             mixer_enabled = false;
@@ -316,11 +304,11 @@ int main(int argc, char **argv)
       }
       else {
          if (stop_flag) {
-            /*for (int i = 0; i < 4; i++)
-               motor_command[i] = pwm_minval;*/
+            for (int i = 0; i < 4; i++)
+               motor_command[i] = pwm_minval;
 
-            //_set_pwm_interval_all(0, pwm_minval);
-            ROS_INFO("MC: %d, %d, %d, %d", motor_command[0], motor_command[1], motor_command[2], motor_command[3]);
+            _set_pwm_interval_all(0, pwm_minval);
+            //ROS_INFO("MC: %d, %d, %d, %d", motor_command[0], motor_command[1], motor_command[2], motor_command[3]);
 
             stop_flag = false;
          }
@@ -331,7 +319,7 @@ int main(int argc, char **argv)
    }
 
    // Disarm motors
-   //_set_pwm_interval_all(0, 0);
+   _set_pwm_interval_all(0, 0);
 
    return 0;
 }

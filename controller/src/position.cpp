@@ -65,7 +65,6 @@ controller::FloatList control_msg;
 double mass;
 
 
-
 void setpoint_callback(const controller::FloatList& setpoint_msg)
 {
    setpoint[0] = setpoint_msg.data[0];  // desired x
@@ -86,16 +85,6 @@ void plant_state_callback(const geometry_msgs::TransformStamped& state_msg)
 
    //ROS_INFO("XYZ: %f, %f, %f", plant_state[0], plant_state[1], plant_state[2]);
 }
-
-
-/*void angles_callback(const controller::FloatList& angles_msg)
-{
-   plant_state[3] = angles_msg.data[0];
-   plant_state[4] = angles_msg.data[1];
-   plant_state[5] = angles_msg.data[2];
-
-   //ROS_INFO("RPY: %f, %f, %f, plant_state[3], plant_state[4], plant_state[5]);
-}*/
 
 
 void controller_enable_callback(const std_msgs::Bool& controller_enable_msg)
@@ -226,7 +215,7 @@ int main(int argc, char **argv)
    node_priv.param<double>("y_lower_limit", lower_limit[1], -1.0);
 	node_priv.param<double>("z_upper_limit", upper_limit[2], 1.0);
    node_priv.param<double>("z_lower_limit", lower_limit[2], -1.0);
-   node_priv.param<double>("mass", mass, 0.72);
+   node_priv.param<double>("mass", mass, 0.9);
    node_priv.param<std::string>("topic_from_plant", topic_from_plant, "state");
    node_priv.param<std::string>("setpoints_topic", setpoints_topic, "setpoints");
    node_priv.param<std::string>("controller_enable_topic", controller_enable_topic, "position_enable");
@@ -243,7 +232,6 @@ int main(int argc, char **argv)
    control_effort_pub = node.advertise<controller::FloatList>(topic_from_position, 1);
 
    ros::Subscriber sub = node.subscribe(topic_from_plant, 1, plant_state_callback );
-   //ros::Subscriber angles_sub = node.subscribe("angles", 1, angles_callback );
    ros::Subscriber setpoint_sub = node.subscribe(setpoints_topic, 1, setpoint_callback );
    ros::Subscriber controller_enabled_sub = node.subscribe(controller_enable_topic, 1, controller_enable_callback );
 
@@ -258,8 +246,6 @@ int main(int argc, char **argv)
       ROS_WARN_STREAM("Waiting for the setpoint to be published.");
    while( !ros::topic::waitForMessage<geometry_msgs::TransformStamped>(topic_from_plant, ros::Duration(10.)) )
       ROS_WARN_STREAM("Waiting for a msg on the state of the plant.");
-   /*while( !ros::topic::waitForMessage<controller::FloatList>("angles", ros::Duration(10.)) )
-      ROS_WARN_STREAM("Waiting for a msg on the angles.");*/
 
    ros::Rate loop_rate(frequency);
 

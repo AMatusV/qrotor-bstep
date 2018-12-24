@@ -5,16 +5,12 @@
    </node> 
 
    <node name="attitude_node" pkg="controller" type="attitude" output="screen" >
-   <!-- <node name="attitude_node" pkg="controller" type="attitude_v" output="screen" > -->
-      <param name="Ke1" value="4.4" />
-      <param name="Ke2" value="4.6" />
-      <param name="Ke3" value="1" />
+      <param name="Ke1" value="5.3904" />
+      <param name="Ke2" value="5.4973" />
+      <param name="Ke3" value="1.0129" />
       <param name="Ko1" value="2.5" />
       <param name="Ko2" value="2.5" />
-      <param name="Ko3" value="0.9" />
-      <!-- <param name="Gm1" value="0.0000005" /> -->
-      <!-- <param name="Gm2" value="0.0000005" /> -->
-      <!-- <param name="Gm3" value="0.0000005" /> -->
+      <param name="Ko3" value="0.7826" />
 		<param name="thrust_upper_limit" value="8" />
       <param name="thrust_lower_limit" value="-8" />
       <remap from="state" to="/angles" />

@@ -8,7 +8,6 @@
 #include "controller/FloatList.h"
 
 
-
 ////////////////////////////////////
 // Private Vars
 ////////////////////////////////////
@@ -25,7 +24,6 @@ controller::FloatList setpoints_msg;
 std_msgs::Bool enabled_msg;
 ros::Publisher setpoints_pub;
 ros::Publisher enable_pub;
-
 
 
 void keyboard_callback(const keyboard::Key& key_msg)

@@ -8,21 +8,17 @@
 
    <node pkg="vicon_bridge" type="vicon_bridge" name="vicon" output="screen">
       <param name="stream_mode" value="ClientPull" type="str" />
-      <!--param name="datastream_hostport" value="192.168.0.13:801" type="str" /-->
       <param name="datastream_hostport" value="192.168.10.1:801" type="str" />
       <param name="tf_ref_frame_id" value="/world" type="str" />
    </node>
 
    <node name="position_node" pkg="controller" type="position" output="screen" >
-      <param name="Kr1" value="1.12" />
-      <param name="Kr2" value="1.01" />
-      <param name="Kr3" value="2.21" />
-      <param name="Kv1" value="2.07" />
-      <param name="Kv2" value="1.97" />
-      <param name="Kv3" value="2.46" />
-      <param name="Gm1" value="0.0" /> 
-      <param name="Gm2" value="0.0" /> 
-      <!-- <param name="Gm3" value="0.001" /> -->
+      <param name="Kr1" value="1.6532" />
+      <param name="Kr2" value="1.5982" />
+      <param name="Kr3" value="2.5763" />
+      <param name="Kv1" value="1.6532" />
+      <param name="Kv2" value="1.5982" />
+      <param name="Kv3" value="2.5763" />
 		<param name="x_upper_limit" value="1.75" />
       <param name="x_lower_limit" value="-1.75" />
 		<param name="y_upper_limit" value="1.75" />
